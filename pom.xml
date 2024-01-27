@@ -20,6 +20,7 @@
         <version.assertj>3.23.1</version.assertj>
         <version.jcommander>1.82</version.jcommander>
         <version.system-lambda>1.2.1</version.system-lambda>
+        <runMemoryTests>false</runMemoryTests>
     </properties>
 
     <dependencies>
@@ -48,6 +49,29 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>pedantic</id>
+
+            <properties>
+                <runMemoryTests>true</runMemoryTests>
+            </properties>
+
+            <build>
+                <plugins>
+                    <!-- Surefire Plugin Configuration -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${version.plugin.surefire}</version>
+                        <configuration>
+                            <argLine>-Xmx8m --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <plugins>
 
@@ -73,6 +97,9 @@
                 <version>${version.plugin.surefire}</version>
                 <configuration>
                     <argLine>--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                    <systemPropertyVariables>
+                        <runMemoryTests>${runMemoryTests}</runMemoryTests>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
 

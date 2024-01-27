@@ -52,6 +52,23 @@ $ mvn clean install -Dcheckstyle.skip
 
 You can consult your seminar teacher to help you set the ```checkstyle.skip``` property in your IDE (or just google it).
 
+### Running All Tests
+This time not all tests are executed when compiling the project as showed above. The reason is that `InfiniteSupplierFlowMemoryTest` takes a bit longer as it processes several **billions** numbers. 
+
+There are two ways how to run this tests
+
+1. Set the `runMemoryTest` system property to `true`. This can be done either in IDE (ask your seminar tutor or use google), or when running tests via maven as follows
+
+```bash
+$ mvn clean install -DrunMemoryTest=true
+```
+2. The other way of executing this test is by using the `pedantic` profile defined in the `pom.xml`
+
+```bash
+$ mvn clean install -Ppedantic
+```
+The difference is that the `pedantic` profile also restricts the JVM memory to **8 megabytes** -- as stated later in implementation requirements, your solution should be efficient. 
+
 ### Submitting the Assignment
 Follow instructions of your tutor because the procedure to submit your solution may differ based on your seminar group. However, there are two ways of submission in general:
 * Fork the project, develop your code in a development branch, and finally ask for the merge.
