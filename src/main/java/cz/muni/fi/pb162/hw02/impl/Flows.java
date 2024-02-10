@@ -66,7 +66,7 @@ public class Flows {
      * Crates new {@link FlowSource} backed by given {@link java.util.function.Supplier}
      *
      * @param supplier the supplier used as source of elements
-     * @param terminalValue the terminal value (value which is considered last)
+     * @param terminalValue the terminal value (signals that no more valid elements are available)
      * @return flow of elements from given supplier
      * @param <T> element type parameter
      */

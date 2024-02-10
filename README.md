@@ -131,7 +131,7 @@ var flow = Flows.of(counter::getAndIncrement)
 // > 8
 ```
 
-Look at the provided tests for more examples
+Look at the provided tests for more examples. 
 
 ### Generic Data Types in Java
 [Generics](https://www.baeldung.com/java-generics) are Java's implementation of programming language concept called [Parametric polymorphism](https://en.wikipedia.org/wiki/Parametric_polymorphism) -- type variables for your types. Although this may sound complicated, on the most basic level, generics provide the answer to the question "**...of what?**". 
@@ -152,3 +152,37 @@ There are generally two types of operations/methods you can perform on the `Flow
 
 Consult javadocs for more details. Creating a main method and experimenting with your implementation on top of provided tests is highly recommended.
 
+### Implementation Hints and Ideas
+The goal of this section is to provide you with a rough outline of possible implementation. By no means is this supposed to be a detail description nor is it the only possible approach towards a successful solution. 
+
+
+#### Generic idea 
+
+The `Flow` interface represents an API of a potentially infinite flow of Items. It is supposed to provide an interface of "what can be done" with these items. It doesn't necessarily mean that the item manipulation logic needs to be fully located in the implementing classes. 
+
+
+The `FlowSource` interface is the source of items. It should internally track what the "current" item is, it should be able to provide this item, and it should also be able to advance to the next item (if available). At the very minimum you will have to crete two implementations of `FlowSource`. One that wraps an `Iterator<T>` and provides access to its items, and one that wraps a `Supplier<T>` and server items from it. The first one should be pretty straightforward, the later will have to consider the potential terminal value (which signals that there are no more valid elements). The `FlowSource#advance()` method is the right place where to determine whether next item is available.
+
+
+#### Idea No. 1, Decorated Sources 
+This approach takes advantage of the [Decorator Pattern](https://www.digitalocean.com/community/tutorials/decorator-design-pattern-in-java-example) which provides the means of modifying object behaviour at runtime. The idea is to enrich or restrict object's functionality by wrapping the modified object by another object of the same type, that internally uses the original. Later in the course you will learn that the IO APIs in java are based on this concept.
+
+ `Flow` and `FlowSource` implementations can take advantage of this pattern in a sense that a "starting" `Flow` is always created with one of the two basic `FlowSource` implementations described above, and when you call an intermediate operation (say `Flow#filter()`) the method just returns a new `Flow`, that will use a "decorated" `FlowSource` (say a `FilteringFlowSource`). This "decorated" source will enrich the functionality of the original source (in our example it would add the filtering logic to the `FlowSource#advance()` method). Other operations could be implemented in similar fashion.  
+ 
+#### Idea No 2, Function Composition
+Once agan a `Flow` is always created with one of the two basic `FlowSource`s, however this time there would be no "decorators". Instead, the `Flow` implementation will internally hold a reference to `Predicate<T> currentFilter` and `Function<U, T> currentTransformation`. When `Flow#filter(filter)` is called, `currentFilter` predicated will be composed with the one provided to the `Flow#filter(filter)`.
+
+```java
+currentFilter = currentFilter.and(filter);
+```
+
+Instance of `Flow` will then have to be responsible for applying this filter when interacting with its `FlowSource`.
+
+
+Similarly, a composition can be used for transformations. However, this time, the `Flow#map(transformation)`will need to return a new instance of `Flow` since the type of the elements in the transformed `Flow` is going to be different from the original. So you would do something like
+
+```java
+return new MyFlow<>(source, currentTransformation.andThen(transformation));
+```
+
+_Note: This approach comes as less natural to the author of this assignment, as it somewhat complicates the implementation of other methods (such as `Flow#skip()`. However, you might feel differently about it!_
