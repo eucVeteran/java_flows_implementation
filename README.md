@@ -1,14 +1,16 @@
 Homework assignment no. 2, Flows
 ====================================
 
-**Publication date:**  TBD
+**Publication date:**  8.4.2024
 
-**Submission deadline:** TBD
+**Submission deadline:** 22.4.2024
 
 ## CHANGELOG
 
 General information
 -------------------
+
+
 This section provides general information about the initial structure of the provided codebase.  
 
 ### Project Structure
