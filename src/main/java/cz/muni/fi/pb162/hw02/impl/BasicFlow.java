@@ -14,7 +14,7 @@ import java.util.function.Predicate;
  * @param <T> the type of elements in the flow
  * @author Azizbek Toshpulatov
  */
-public class FlowImplemented<T> implements Flow<T> {
+public class BasicFlow<T> implements Flow<T> {
     private final FlowSource<T> source;
 
     /**
@@ -22,28 +22,28 @@ public class FlowImplemented<T> implements Flow<T> {
      *
      * @param source the source of elements for the flow.
      */
-    public FlowImplemented(FlowSource<T> source) {
+    public BasicFlow(FlowSource<T> source) {
         this.source = source;
     }
 
     @Override
     public Flow<T> filter(Predicate<T> filter) {
-        return new FlowImplemented<>(new FilterFlowSource<>(source, filter));
+        return new BasicFlow<>(new FilterFlowSource<>(source, filter));
     }
 
     @Override
     public Flow<T> limit(long count) {
-        return new FlowImplemented<>(new LimitFlowSource<>(source, count));
+        return new BasicFlow<>(new LimitFlowSource<>(source, count));
     }
 
     @Override
     public Flow<T> skip(long count) {
-        return new FlowImplemented<>(new SkipFlowSource<>(source, count));
+        return new BasicFlow<>(new SkipFlowSource<>(source, count));
     }
 
     @Override
     public <R> Flow<R> map(Function<T, R> transformation) {
-        return new FlowImplemented<>(new MapFlowSource<>(source, transformation));
+        return new BasicFlow<>(new MapFlowSource<>(source, transformation));
     }
 
     @Override

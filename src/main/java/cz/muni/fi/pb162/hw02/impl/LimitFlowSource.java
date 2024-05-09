@@ -8,8 +8,7 @@ import cz.muni.fi.pb162.hw02.FlowSource;
  * @param <T> the type of elements in the source {@link FlowSource}.
  * @author Azizbek Toshpulatov.
  */
-public class LimitFlowSource<T> implements FlowSource<T> {
-    private final FlowSource<T> source;
+public class LimitFlowSource<T> extends FlowSourceDecorator<T> implements FlowSource<T> {
     private long count;
 
     /**
@@ -19,7 +18,7 @@ public class LimitFlowSource<T> implements FlowSource<T> {
      * @param count  the size of limit.
      */
     public LimitFlowSource(FlowSource<T> source, long count) {
-        this.source = source;
+        super(source);
         this.count = count;
     }
 
@@ -28,15 +27,10 @@ public class LimitFlowSource<T> implements FlowSource<T> {
         if (count == 0) {
             return false;
         }
-        if (source.advance()) {
+        if (super.advance()) {
             count--;
             return true;
         }
         return false;
-    }
-
-    @Override
-    public T get() {
-        return source.get();
     }
 }

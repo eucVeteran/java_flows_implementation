@@ -26,7 +26,7 @@ public class Flows {
      * @param <T> element type parameter
      */
     public static <T> Flow<T> of(Collection<T> collection) {
-        return new FlowImplemented<>(new IteratorFlowSource<>(collection.iterator()));
+        return new BasicFlow<>(new IteratorFlowSource<>(collection.iterator()));
     }
 
     /**
@@ -37,7 +37,7 @@ public class Flows {
      * @param <T> element type parameter
      */
     public static <T> Flow<T> of(Iterable<T> iterable) {
-        return new FlowImplemented<>(new IteratorFlowSource<>(iterable.iterator()));
+        return new BasicFlow<>(new IteratorFlowSource<>(iterable.iterator()));
     }
 
     /**
@@ -48,7 +48,7 @@ public class Flows {
      * @param <T> element type parameter
      */
     public static <T> Flow<T> of(Iterator<T> iterator) {
-        return new FlowImplemented<>(new IteratorFlowSource<>(iterator));
+        return new BasicFlow<>(new IteratorFlowSource<>(iterator));
     }
 
     /**
@@ -59,7 +59,7 @@ public class Flows {
      * @param <T> element type parameter
      */
     public static <T> Flow<T> of(Supplier<T> supplier) {
-        return new FlowImplemented<>(new SupplierFlowSource<>(supplier));
+        return new BasicFlow<>(new SupplierFlowSource<>(supplier));
     }
 
     /**
@@ -71,7 +71,7 @@ public class Flows {
      * @param <T> element type parameter
      */
     public static <T> Flow<T> of(Supplier<T> supplier,T terminalValue) {
-        return new FlowImplemented<>(new SupplierFlowSource<>(supplier, terminalValue));
+        return new BasicFlow<>(new SupplierFlowSource<>(supplier, terminalValue));
     }
 
     /**
@@ -82,6 +82,6 @@ public class Flows {
      * @param <T> element type parameter
      */
     public static <T> Flow<T> of(FlowSource<T> source) {
-        return new FlowImplemented<>(source);
+        return new BasicFlow<>(source);
     }
 }

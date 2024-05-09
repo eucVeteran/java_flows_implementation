@@ -10,8 +10,7 @@ import java.util.function.Predicate;
  * @param <T> the type of elements in the source {@link FlowSource}.
  * @author Azizbek Toshpulatov.
  */
-public class FilterFlowSource<T> implements FlowSource<T> {
-    private final FlowSource<T> source;
+public class FilterFlowSource<T> extends FlowSourceDecorator<T> implements FlowSource<T> {
     private final Predicate<T> filter;
 
     /**
@@ -21,23 +20,18 @@ public class FilterFlowSource<T> implements FlowSource<T> {
      * @param filter the filter.
      */
     public FilterFlowSource(FlowSource<T> source, Predicate<T> filter) {
-        this.source = source;
+        super(source);
         this.filter = filter;
     }
 
     @Override
     public boolean advance() {
-        if (source.advance()) {
-            if (!filter.test(source.get())) {
+        if (super.advance()) {
+            if (!filter.test(super.get())) {
                 return advance();
             }
             return true;
         }
         return false;
-    }
-
-    @Override
-    public T get() {
-        return source.get();
     }
 }
